@@ -1,12 +1,16 @@
 # coding: UTF-8
 """
-"""
 
+"""
 import sys
 
 
-def main():
-   return 0;
+DELAY = 0.0005
+VISITAS = 250
+
+
+def main(argv=sys.argv):
+    return 0
 
 
 
