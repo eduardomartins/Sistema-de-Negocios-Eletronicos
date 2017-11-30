@@ -1,6 +1,7 @@
 # coding: UTF-8
 
 import time
+from numpy.random import trangular
 
 
 class Observable(object):
@@ -24,13 +25,21 @@ class Observable(object):
             observer.update(*args, **kwargs)
 
 class Pacote(object):
-    def __init__(self, id, tempo_inicial=0):
+    def __init__(self, id, tempo_inicial=0, tamanho=0):
         self.id = id
-        self.tempo_inicial = tempo_inicial
+        self._tamanho = 0
         self.tempo_sis = 0
         self.tempo_fila = 0
         self.tempo_ocioso = 0
-
+        self.tempo_inicial = tempo_inicial
+    
+    def set_tamanho(self, tamanho):
+        self._tamanho = tamanho
+     
+    @properity
+    def tamanho(self):
+        return triangular(self._tamanho[0], self._tamanho[1], self._tamanho[2])
+    
     def atualiza_tempo(self, tempo_sis=0, tempo_fila=0, tempo_ocioso=0):
         self.tempo_sis += tempo_sis
         self.tempo_fila += tempo_fila
@@ -50,9 +59,9 @@ class Pacote(object):
 
 class Cliente(Observable):
     pacotes_hora = 250
+    
     def iniciar(self, pacotes=0, delay=0):
         for pac_id in range(self.pacotes_hora + pacotes):
-            #time.sleep(0.5)
             pacote = Pacote(pac_id)
             pacote.atualiza_tempo(tempo_sis=delay)
             self.update_observers(pacote)
