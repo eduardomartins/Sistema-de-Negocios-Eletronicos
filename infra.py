@@ -1,42 +1,44 @@
 # coding: utf-8
-from no import No
+from no import No, TAMANHOS
+from maquina import Estado
 
 
-class Lan(No):
-    def __init__(self, probablidade=None, tamanho=None, velocidade=100, capacidade=0.8):
-        super(Lan, self).__init__(probablidade=probablidade, tamanho=tamanho)
-        self.velocidade = velocidade
-        self.capaciade = capacidade
 
-    def calcular(self):
-        return self.velocidade
+class Firewall(Estado):
+    pass
 
 
-class ServidorAplicacao(No):
-    def __init__(self, tempo_min, tempo_max, probablidade=None, tamanho=None):
-        super(ServidorAplicacao, self).__init__(probablidade=probablidade, tamanho=tamanho)
+
+class Roteador(Estado):
+    pass
+
+
+
+class Lan(Estado):
+    def executar(self, pacote):
+        pacote.atualiza_tempo(0.00015) # Adiciona 0,00015 seg
+
+
+
+class ServidorAplicacao(Estado):
+    def __init__(self, tempo_min, tempo_max, *args, **kwargs):
+        super(ServidorAplicacao, self).__init__(*args, **kwargs)
         self.tempo_min = tempo_min
         self.tempo_max = tempo_max
 
-    def calcular(self):
-        return self.velocidade
 
 
-class ServidorWeb(No):
-    def __init__(self, tempo_min, tempo_max, probablidade=None, tamanho=None):
-        super(ServidorWeb, self).__init__(probablidade=probablidade, tamanho=tamanho)
+class ServidorWeb(No, Estado):
+    def __init__(self, tempo_min, tempo_max, *args, **kwargs):
+        super(ServidorWeb, self).__init__(*args, **kwargs)
         self.tempo_min = tempo_min
         self.tempo_max = tempo_max
 
-    def calcular(self):
-        return self.velocidade
 
 
-class ServidorBancoDados(No):
-    def __init__(self, tempo_min, tempo_max, probablidade=None, tamanho=None):
-        super(ServidorWeb, self).__init__(probablidade=probablidade, tamanho=tamanho)
+class ServidorBancoDados(No, Estado):
+    def __init__(self, tempo_min, tempo_max, *args, **kwargs):
+        super(ServidorBancoDados, self).__init__(*args, **kwargs)
         self.tempo_min = tempo_min
         self.tempo_max = tempo_max
 
-    def calcular(self):
-        return self.velocidade
