@@ -38,21 +38,33 @@ class Maquina(object):
 
 
 class Estado(object):
-    proximo = None
+    proximos = set()
     disponivel = True
-
-    def __init__(self, link = None):
-        self.link = link
+    
+    def __init__(self, proximos):
+        self.proximos += set(proximos)
 
     def __iter__(self):
-        return self.proximo
+        probabilidades = [proximo.probabilidade for proximo in self.proximos]
+        teto = 0
+        for ind, prob in enumerate(probabilidades):
+            teto += prob
+            if n <= prob:
+                return proximos[ind] 
+    
+    def __repr__(self):
+        return '%s [%s, %s]' % (
+            self.__class__.__name__,
+            self.probabilidade,
+            self.tamanho
+    )
 
     def executar(self, pacote):
         raise NotImplementedError
 
     def add_proximo(self, proximo):
-        self.proximo = proximo
-        return self.proximo
+        self.proximo.append(proximo)
+        return self.proximo.estado
 
 
 
