@@ -20,7 +20,7 @@ TAMANHOS = {
 
 
 class Trafego(object):
-    def __init__(self, estado, probablidade=None, tamanho=None):
+    def __init__(self, estado, probablidade=1, tamanho=None):
         """  """
         self.estado = estado
         if tamanho and not isinstance(tamanho, DisTri):
@@ -28,7 +28,7 @@ class Trafego(object):
 
         self.tamanho = tamanho
 
-        if probablidade and not(probablidade >= 0 and probablidade <= 1.0):
+        if not(probablidade >= 0 and probablidade <= 1.0):
             raise Exception('O valor da probablidade está fora do intervalo válido')
 
         self.probabilidade = probablidade
