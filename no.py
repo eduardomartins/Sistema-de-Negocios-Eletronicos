@@ -19,10 +19,10 @@ TAMANHOS = {
 
 
 
-class No(object):
-    def __init__(self, probablidade=None, tamanho=None):
+class Trafego(object):
+    def __init__(self, estado, probablidade=None, tamanho=None):
         """  """
-
+        self.estado = estado
         if tamanho and not isinstance(tamanho, DisTri):
             raise Exception('O tamanho deve ser um tipo Ponto')
 
@@ -35,14 +35,8 @@ class No(object):
 
     def __repr__(self):
         return '%s [%s, %s]' % (
-            self.__class__.__name__,
+            self.estado.__class__.__name__,
             self.probabilidade,
             self.tamanho
         )
-
-    def calcular(self):
-        raise NotImplementedError
-
-    def tempo(self):
-        raise NotImplementedError
 
