@@ -48,11 +48,8 @@ class Estado(Thread):
                 return proximos[ind] 
     
     def __repr__(self):
-        return '%s [%s, %s]' % (
-            self.__class__.__name__,
-            self.probabilidade,
-            self.tamanho
-    )
+        return self.__class__.__name__
+ 
     
     def executar(self, pacote):
         raise NotImplementedError
