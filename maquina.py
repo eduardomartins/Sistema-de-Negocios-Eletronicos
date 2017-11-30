@@ -10,20 +10,15 @@ class Maquina(object):
 
     _iteracoes = []
 
-    def __init__(self, inicial):
+    def __init__(self, inicio):
 
-        if not isinstance(inicial, Estado):
+        if not isinstance(inicio, Estado):
             raise Exception('Incial deve ser um estado')
 
-        self.inicial = inicial
-
-        self._thread = thread.start_new_thread(self.setup, (self.__class__.__name__,))
-
+        self.inicial = inicio        
         self._iteracoes.append(self)
 
-    def setup(self, *args, **kwargs):
-        print(self._iteracoes, *args, *kwargs)
-
+        
     @abstractmethod
     def update(self, pacote, *args, **kwargs):
         print(pacote)
@@ -31,14 +26,15 @@ class Maquina(object):
 
     def __iter__(self):
         proximo = self.inicial
-        while(proximo):
-            yield proximo
-            proximo = proximo.proximo
+        for pro in proximo:
+            yield pro
+            
 
 
 
 class Estado(Thread):
-    def __init__(self, proximos):
+    def __init__(self, proximos, *args. *kwargs):
+        super(Estado, self).__init__(*args, *kwargs)
         self._fila = Queue()
         self._disponivel = True
         self.proximos += set(proximos)
@@ -57,10 +53,14 @@ class Estado(Thread):
             self.probabilidade,
             self.tamanho
     )
-
+    
     def executar(self, pacote):
         raise NotImplementedError
 
     def add_proximo(self, proximo):
         self.proximo.append(proximo)
         return self.proximo.estado
+    
+    def run(self, *args, **kwargs):
+        print("Executanto...")
+        self.executar(*args, **kwargs)
