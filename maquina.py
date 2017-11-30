@@ -58,6 +58,13 @@ class Estado(Thread):
         self.proximo.append(proximo)
         return self.proximo.estado
     
-    def run(self, *args, **kwargs):
+    def run(self, pacote, *args, **kwargs):
         print("Executanto...")
-        self.executar(*args, **kwargs)
+        
+        if self.disponivel:
+            self.executar(pacote, *args, **kwargs)
+        else:
+            self._fila.put(pacote)
+            while self.disponivel and :
+                self.executar(pacote, *args, **kwargs)
+                
