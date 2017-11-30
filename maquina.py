@@ -1,7 +1,7 @@
 # coding: UTF-8
 
-
-import _thread as thread
+from queue import Queue
+from threading import Thread
 from abc import ABCMeta, abstractmethod
 
 
@@ -37,11 +37,10 @@ class Maquina(object):
 
 
 
-class Estado(object):
-    proximos = set()
-    disponivel = True
-    
+class Estado(Thread):
     def __init__(self, proximos):
+        self._fila = Queue()
+        self._disponivel = True
         self.proximos += set(proximos)
 
     def __iter__(self):
@@ -65,9 +64,3 @@ class Estado(object):
     def add_proximo(self, proximo):
         self.proximo.append(proximo)
         return self.proximo.estado
-
-
-
-
-def factory_maquina(class_name):
-    return type(class_name, (Maquina, ), {'_fila_espera'    : []})
