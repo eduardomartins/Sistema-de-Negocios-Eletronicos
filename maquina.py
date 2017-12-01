@@ -1,7 +1,8 @@
 # coding: UTF-8
 
 from queue import Queue
-from threading import Thread
+from random import random
+from threading import Thread, Condition, Lock
 from abc import ABCMeta, abstractmethod
 
 
@@ -12,9 +13,6 @@ class Maquina(object):
 
     def __init__(self, inicio):
 
-        if not isinstance(inicio, Estado):
-            raise Exception('Incial deve ser um estado')
-
         self.inicial = inicio        
         self._iteracoes.append(self)
 
@@ -22,49 +20,70 @@ class Maquina(object):
     @abstractmethod
     def update(self, pacote, *args, **kwargs):
         print(pacote)
+        estado = self.inicial
+        estado.add_pacote(pacote)
+        print("# %s - Tamanho da Fila: %s" % (estado, estado._fila.qsize()))
 
+        while(estado):
 
-    def __iter__(self):
-        proximo = self.inicial
-        for pro in proximo:
-            yield pro
-            
+            estado = estado.proximo()
 
 
 
 class Estado(Thread):
-    def __init__(self, proximos, *args. *kwargs):
-        super(Estado, self).__init__(*args, *kwargs)
+    def __init__(self, *args, **kwargs):
+        super(Estado, self).__init__(*args, **kwargs)
         self._fila = Queue()
-        self._disponivel = True
-        self.proximos += set(proximos)
+        self._processando = Lock()
+        self._disponivel = Condition(self._processando)
+        self.proximos = dict()
+
+
+
+    def __setitem__(self, key, value):
+        self.proximos[key] = value
+
+    def __getitem__(self, item):
+        return self.proximos[item]
+
+    def add_pacote(self, pacote):
+        self._fila.put(pacote)
+
+    def proximo(self):
+
+        teto = 0
+
+        num = round(random(), 2)
+
+        for key, value in self.proximos.items():
+            teto += key.probabilidade
+
+            if num <= teto:
+                return self.proximos[key]
+
+        return None
 
     def __iter__(self):
-        probabilidades = [proximo.probabilidade for proximo in self.proximos]
-        teto = 0
-        for ind, prob in enumerate(probabilidades):
-            teto += prob
-            if n <= prob:
-                return proximos[ind] 
+        return self.proximo()
     
+
     def __repr__(self):
         return self.__class__.__name__
- 
-    
-    def executar(self, pacote):
-        raise NotImplementedError
 
-    def add_proximo(self, proximo):
-        self.proximo.append(proximo)
-        return self.proximo.estado
+
+    def executar(self, pacote, *args, **kwargs):
+        pass
+
     
-    def run(self, pacote, *args, **kwargs):
-        print("Executanto...")
-        
-        if self.disponivel:
-            self.executar(pacote, *args, **kwargs)
-        else:
-            self._fila.put(pacote)
-            while self.disponivel and :
-                self.executar(pacote, *args, **kwargs)
-                
+    def run(self,*args, **kwargs):
+        print("Executanto %s ..." % self.__class__.__name__)
+
+        while True:
+            #print('##', self.is_alive())
+            while not(self._fila.empty()):
+                if self._disponivel:
+
+                    self.executar(self._fila.get(), *args, **kwargs)
+            #else:
+                #self._disponivel.wait()
+

@@ -19,14 +19,21 @@ TAMANHOS = {
 
 
 
-class Trafego(object):
-    def __init__(self, estado, probablidade=1, tamanho=None):
+class Fluxo(object):
+    def __init__(self, probablidade=1, tamanho=None):
         """  """
-        self.estado = estado
-        if tamanho and not isinstance(tamanho, DisTri):
+
+        if tamanho and tamanho in TAMANHOS.keys():
+
+            self.tamanho = TAMANHOS.get(tamanho)
+
+        elif tamanho and not isinstance(tamanho, DisTri):
+
             raise Exception('O tamanho deve ser um tipo Ponto')
 
-        self.tamanho = tamanho
+        else:
+
+            self.tamanho = tamanho
 
         if not(probablidade >= 0 and probablidade <= 1.0):
             raise Exception('O valor da probablidade está fora do intervalo válido')
@@ -34,8 +41,7 @@ class Trafego(object):
         self.probabilidade = probablidade
 
     def __repr__(self):
-        return '%s [%s, %s]' % (
-            self.estado.__class__.__name__,
+        return '[%s, %s]' % (
             self.probabilidade,
             self.tamanho
         )

@@ -2,11 +2,12 @@
 """
 
 """
-import time
 import sys
+
+import maquina
 from maquina import Maquina
 from cliente import Cliente
-from no import trafego, TAMANHOS
+from fluxo import Fluxo
 from infra import Lan, ServidorBancoDados, ServidorWeb, ServidorAplicacao, Roteador, Firewall
 
 
@@ -17,36 +18,54 @@ VISITAS = 250
 def main(argv=sys.argv):
    
     lan1 = Lan()
+    lan1.start()
+
     lan2 = Lan()
+    lan2.start()
+
     fw = Firewall()
+    fw.start()
+
     rot = Roteador()
+    rot.start()
+
     sw = ServidorWeb()
+    sw.start()
+
     sa = ServidorAplicacao()
+    sa.start()
+
     bd = ServidorBancoDados()
-    
-    maquina = Maquina(roteador)
-    no = maquina.inicial.add_proximo(Trafego(lan1)).add_proximo(Trafego(sw)).add_proximo(Trafego(sa, 0.95, TAMANHOS.get('M3')))
-    
-    # Interação 2
-    #interacao2 = 
-    no.add_proximo(Trafego(sw, 0.2, TAMANHOS.get('M3')))
-    
-    # Interação 3
-    #interacao3 =
-     no.add_proximo(Trafego(bd, 0.8, TAMANHOS.get('M6'))).add_proximo(Trafego(sa, 1, TAMANHOS.get('M7'))).add_proximo(Trafego(sw, 1, TAMANHOS.get('M9')))
-    
-                     
+    bd.start()
+
+    maquina = Maquina(rot)
+
+
+    rot[Fluxo()] = lan1
+
+    lan1[Fluxo()] = sw
+
+    sw[Fluxo(0.95, 'M3')] = sa
+
+    sa[Fluxo(0.2, 'M4')] = sw
+
+    sa[Fluxo(0.8, 'M6')] = bd
+
+    bd[Fluxo(1.0, 'M7')] = sa
+
+    sa[Fluxo(1.0, 'M8')] = sw
+
+
     cliente = Cliente()
+
     cliente.register(maquina)
 
     pacotes = 0
+
     if len(argv) > 1:
         pacotes = int(argv[1])
 
     cliente.iniciar(pacotes, delay=DELAY)
-
-    return 0
-
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 # coding: UTF-8
 
 import time
-from numpy.random import trangular
+from numpy.random import triangular
 
 
 class Observable(object):
@@ -24,6 +24,8 @@ class Observable(object):
         for observer in self.observers:
             observer.update(*args, **kwargs)
 
+
+
 class Pacote(object):
     def __init__(self, id, tempo_inicial=0, tamanho=0):
         self.id = id
@@ -36,7 +38,7 @@ class Pacote(object):
     def set_tamanho(self, tamanho):
         self._tamanho = tamanho
      
-    @properity
+    @property
     def tamanho(self):
         return triangular(self._tamanho[0], self._tamanho[1], self._tamanho[2])
     
@@ -47,14 +49,14 @@ class Pacote(object):
 
     @property
     def tempo_total(self):
-        return self.tempo_fila + self.tempo_ocioso + self.tempo_sis
+        return self.tempo_inicial + self.tempo_fila + self.tempo_ocioso + self.tempo_sis
 
     @property
     def tempo(self):
         return self.tempo_total - self.tempo_inicial
 
     def __repr__(self):
-        return "Pacote: %s | tempo(%s)" % (self.id, self.tempo)
+        return "Pacote: %s | tempo(%s)" % (self.id, self.tempo_total)
 
 
 class Cliente(Observable):
